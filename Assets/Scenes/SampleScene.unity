@@ -444,8 +444,8 @@ MonoBehaviour:
   parent: {fileID: 0}
   maxHorizontal: 5
   minHorizontal: -5
-  maxVertical: 0
-  minVertical: -5
+  maxVertical: -6
+  minVertical: -6
 --- !u!4 &1856491002
 Transform:
   m_ObjectHideFlags: 0
