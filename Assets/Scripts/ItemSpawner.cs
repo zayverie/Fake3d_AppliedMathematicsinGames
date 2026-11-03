@@ -17,7 +17,7 @@ public class ItemSpawner : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating(nameof(BeginSpawn), 1, 0.3f);
+        InvokeRepeating(nameof(BeginSpawn), 1, 1f);
     }
 
     private void BeginSpawn()
@@ -31,16 +31,19 @@ public class ItemSpawner : MonoBehaviour
     {
         var xRand = Random.Range(minHorizontal, maxHorizontal);
         var yRand = Random.Range(minVertical, maxVertical);
-        return new Vector3(xRand, yRand, 0);
+        return new Vector3(xRand, yRand, 1000f);
     }
 
     private void Update()
     {
         foreach (var item in items)
         {
+            if (item == null)
+            {
+                continue;
+            }
             ItemMover(item);
         }
-
 
         transform.position = GetRandomLocation();
         List<Transform> children = new List<Transform>();
@@ -58,7 +61,7 @@ public class ItemSpawner : MonoBehaviour
 
     private void ItemMover(Item item)
     {
-        item.itemPosition.z += speed;
+        item.itemPosition.z -= speed;
     }
 
 

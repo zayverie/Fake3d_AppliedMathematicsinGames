@@ -17,9 +17,16 @@ public class Item : MonoBehaviour
 
     private void Update()
     {
-            var perspective = CameraComponent.focalLength / (CameraComponent.focalLength + itemPosition.z);
-            transform.localScale = Vector3.one * perspective;
-            transform.position = new Vector2(itemPosition.x, itemPosition.y) * perspective;
+        float obstaclePositionValue = FocalLength.focalLength + itemPosition.z;
+
+        if (obstaclePositionValue <= 0)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        var perspective = FocalLength.focalLength / obstaclePositionValue;
+        transform.localScale = Vector3.one * perspective;
+        transform.position = new Vector2(itemPosition.x, itemPosition.y) * perspective;
     }
 
     private Color GetRandomColor()
