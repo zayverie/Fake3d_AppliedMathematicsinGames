@@ -18,7 +18,10 @@ public class Player : MonoBehaviour
     [Header("Lane Movement")]
     private float[] lanes = new float[] { -1f, 0f, 1f };
     private int currentLaneIndex = 1; 
-    [SerializeField] private float laneShiftSpeed = 20f; 
+    [SerializeField] private float laneShiftDuration = 0.15f; 
+    private float startX = 0f;
+    private float targetX = 0f;
+    private float laneTimer = 1f;
     
     [Header("Health Settings")]
     public float currentHp;
@@ -71,6 +74,9 @@ public class Player : MonoBehaviour
             if (currentLaneIndex > 0)
             {
                 currentLaneIndex--;
+                startX = transform.position.x;
+                targetX = lanes[currentLaneIndex];
+                laneTimer = 0f;
                 if (anim != null)
                 {
                     anim.SetTrigger("Left");
@@ -82,6 +88,9 @@ public class Player : MonoBehaviour
             if (currentLaneIndex < lanes.Length - 1)
             {
                 currentLaneIndex++;
+                startX = transform.position.x;
+                targetX = lanes[currentLaneIndex];
+                laneTimer = 0f;
                 if (anim != null)
                 {
                     anim.SetTrigger("Right");
@@ -99,12 +108,6 @@ public class Player : MonoBehaviour
             anim.SetBool("isGrounded", isGrounded);
         }
 
-        if (currentHp <= 0)
-        {
-            UIManager.Instance.LoseGame();
-            Debug.Log("Player has been defeated!");
-        }
-
         if (currentHp < maxHp)
         {
             RegenerateHealth();
@@ -113,16 +116,25 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {  
-        float targetX = lanes[currentLaneIndex];
-        float moveX = Mathf.MoveTowards(transform.position.x, targetX, laneShiftSpeed * Time.fixedDeltaTime);
-        transform.position = new Vector3(moveX, transform.position.y, transform.position.z);
+        if (laneTimer < laneShiftDuration)
+        {
+            laneTimer += Time.fixedDeltaTime;
+            float t = Mathf.Clamp01(laneTimer / laneShiftDuration);
+            float easedT = Ease.EaseOutCubic(t);
+            float currentX = Mathf.Lerp(startX, targetX, easedT);
+            transform.position = new Vector3(currentX, transform.position.y, transform.position.z);
+        }
+        else
+        {
+            transform.position = new Vector3(targetX, transform.position.y, transform.position.z);
+        }
 
         if (_jumpPressed && isGrounded)
         {
             Debug.Log("Jump pressed");
             verticalVelocity = jumpForce;
             isGrounded = false;
-            Player.Instance.isCollidingWithItem = false;
+            isCollidingWithItem = false;
         }
         _jumpPressed = false;
         verticalVelocity -= gravity * Time.fixedDeltaTime;

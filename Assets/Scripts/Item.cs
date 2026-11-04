@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class Item : MonoBehaviour
 {
+    public IObjectPool<Item> ObjPool {get; set;}
     public Vector3 itemPosition;
     private SpriteRenderer spriteRenderer;
     private void Awake()
@@ -22,12 +24,11 @@ public class Item : MonoBehaviour
 
     public void ApplyPerspective()
     {
-        
         float itemPositionValue = FocalLength.focalLength + itemPosition.z;
 
         if (itemPositionValue <= 0)
         {
-            Destroy(gameObject);
+            ReleaseItemToPool();
             return;
         }
         var perspective = FocalLength.focalLength / itemPositionValue;
@@ -37,10 +38,21 @@ public class Item : MonoBehaviour
 
         if (perspective > 5f)
         {
-            Destroy(gameObject);
+            ReleaseItemToPool();
         }
     }
 
+    public void ReleaseItemToPool()
+    {
+        if (ObjPool != null)
+        {
+            ObjPool.Release(this);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     private Color GetRandomColor()
     {
         var rRand = Random.Range(0f, 1f);

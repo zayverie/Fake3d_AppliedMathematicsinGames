@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using UnityEngine.Pool;
 
 public class ItemSpawner : MonoBehaviour
 {
@@ -10,6 +11,13 @@ public class ItemSpawner : MonoBehaviour
     public float speed = 5f;
     public List<Item> items = new List<Item>();
     public Transform parent;
+
+    [Header("Pool Settings")]
+    [SerializeField] private bool collectionCheck = true;
+    [SerializeField] private int defaultCapacity = 20;
+    [SerializeField] private int maxSize = 100;
+
+    private Dictionary<GameObject, IObjectPool<Item>> _pools = new Dictionary<GameObject, IObjectPool<Item>>();
     private float[] lanes = {-1, 0, 1};
 
     private void Start()
@@ -66,6 +74,53 @@ public class ItemSpawner : MonoBehaviour
     {
         item.itemPosition.z -= speed;
     }
+
+    #region Pooling
+    private IObjectPool<Item> GetPool(GameObject prefab)
+    {
+        if (_pools.TryGetValue(prefab, out IObjectPool<Item> pool))
+            return pool;
+
+        pool = new ObjectPool<Item>(
+            () => CreateItem(prefab),
+            OnGetFromPool,
+            OnReleaseToPool,
+            OnDestroyPooledObject,
+            collectionCheck,
+            defaultCapacity,
+            maxSize);
+
+        _pools.Add(prefab, pool);
+        return pool;
+    }
+
+    private Item CreateItem(GameObject prefab)
+    {
+        GameObject instance = Instantiate(prefab, parent != null ? parent : transform);
+        instance.SetActive(false);
+
+        Item item = instance.GetComponent<Item>();
+        item.ObjPool = _pools[prefab];
+
+        return item;
+    }
+
+    private void OnGetFromPool(Item item)
+    {
+        item.gameObject.SetActive(true);
+    }
+
+    private void OnReleaseToPool(Item item)
+    {
+        item.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyPooledObject(Item item)
+    {
+        if (item != null)
+            Destroy(item.gameObject);
+    }
+    #endregion
 
 
 }
