@@ -24,8 +24,8 @@ public class Player : MonoBehaviour
     private float laneTimer = 1f;
     
     [Header("Health Settings")]
-    public float currentHp;
-    public float maxHp = 100f;
+    public int currentHp;
+    public int maxHp = 100;
 
     [Header("Regen Settings")]
     public float regenRate = 1f;
@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         currentHp = maxHp;
+        InvokeRepeating(nameof(RegenerateHealth), 1f, 1f);
 
         if (UIManager.Instance != null)
         {
@@ -107,11 +108,6 @@ public class Player : MonoBehaviour
         {
             anim.SetBool("isGrounded", isGrounded);
         }
-
-        if (currentHp < maxHp)
-        {
-            RegenerateHealth();
-        }
     }
 
     void FixedUpdate()
@@ -154,7 +150,7 @@ public class Player : MonoBehaviour
         return verticalVelocity;
     }
 
-    public void TakeDamage(float damageAmount)
+    public void TakeDamage(int damageAmount)
     {
         if (isInvincible)
         {
@@ -197,16 +193,17 @@ public class Player : MonoBehaviour
 
     public void RegenerateHealth()
     {
-        if (currentHp < maxHp)
+        if (currentHp <= 0 || currentHp >= maxHp)
         {
-            currentHp += regenRate * Time.deltaTime;
-            currentHp = Mathf.Clamp(currentHp, 0, maxHp);
+            return;
+        }
 
-            if (UIManager.Instance != null)
-            {
-                UIManager.Instance.UpdateHealthBarRegen(currentHp, maxHp);
-                UIManager.Instance.UpdateHealthText(currentHp, maxHp);
-            }
+        currentHp++;
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateHealthBarRegen(currentHp, maxHp);
+            UIManager.Instance.UpdateHealthText(currentHp, maxHp);
         }
     }
 }

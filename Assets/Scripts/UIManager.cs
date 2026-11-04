@@ -30,7 +30,7 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Time.timeScale = 1f;
-        
+
         if (instance == null)
         {
             instance = this;
@@ -114,19 +114,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void WinGame()
-    {
-        if (winPanel != null)
-        {
-            winPanel.SetActive(true);
-        }
-    }
-
     public void LoseGame()
     {
         if (losePanel != null)
         {
-            gameplayUI.SetActive(false);
+            if (gameplayUI != null)
+            {
+                gameplayUI.SetActive(false);
+            }
             losePanel.SetActive(true);
             Time.timeScale = 0f;
         }

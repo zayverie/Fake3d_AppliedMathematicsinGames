@@ -71,7 +71,7 @@ public class AABBCollider : MonoBehaviour
                     {
                         Debug.Log($"Player Y: {transform.position.y} | Item Y: {other.transform.position.y}");
                         Player.Instance.isCollidingWithItem = true;
-                        Player.Instance.TakeDamage(5f);
+                        Player.Instance.TakeDamage(5);
 
                         hitItem.ReleaseItemToPool();
                     }
