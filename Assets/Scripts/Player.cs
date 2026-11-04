@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class Player : MonoBehaviour
 {
@@ -28,6 +29,10 @@ public class Player : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private Animator anim;
+
+    [Header("Invincibility Settings")]
+    private float invincibilityDuration = .5f;
+    public bool isInvincible { get; private set; } = false;
 
     void Awake()
     {
@@ -139,6 +144,11 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(float damageAmount)
     {
+        if (isInvincible)
+        {
+            return;
+        }
+
         currentHp -= damageAmount;
         currentHp = Mathf.Clamp(currentHp, 0, maxHp);
 
@@ -151,6 +161,26 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(UIManager.Instance.FlashDamage());
         }
+
+        StartCoroutine(InvincibilityCoroutine());
+    }
+
+    IEnumerator InvincibilityCoroutine()
+    {
+        isInvincible = true;
+        if (anim != null)
+        {
+            anim.SetBool("isHit", true);
+        }
+
+        yield return new WaitForSeconds(invincibilityDuration);
+
+        if (anim != null)
+        {
+            anim.SetBool("isHit", false);
+        }
+
+        isInvincible = false;
     }
 
     public void RegenerateHealth()

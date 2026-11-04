@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 
@@ -128,7 +128,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public System.Collections.IEnumerator FlashDamage()
+    public IEnumerator FlashDamage()
     {
         if (damageFlashPanel != null)
         {
