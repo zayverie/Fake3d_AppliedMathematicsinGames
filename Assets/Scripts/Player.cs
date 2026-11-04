@@ -26,6 +26,9 @@ public class Player : MonoBehaviour
     [Header("Regen Settings")]
     public float regenRate = 1f;
 
+    [Header("Animation")]
+    [SerializeField] private Animator anim;
+
     void Awake()
     {
         if (instance == null)
@@ -35,6 +38,11 @@ public class Player : MonoBehaviour
         else
         {
             Destroy(this);
+        }
+
+        if (anim == null)
+        {
+            anim = GetComponentInChildren<Animator>();
         }
     }
     void Start()
@@ -58,6 +66,10 @@ public class Player : MonoBehaviour
             if (currentLaneIndex > 0)
             {
                 currentLaneIndex--;
+                if (anim != null)
+                {
+                    anim.SetTrigger("Left");
+                }
             }
         }
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
@@ -65,12 +77,21 @@ public class Player : MonoBehaviour
             if (currentLaneIndex < lanes.Length - 1)
             {
                 currentLaneIndex++;
+                if (anim != null)
+                {
+                    anim.SetTrigger("Right");
+                }
             }
         }
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             _jumpPressed = true;
+        }
+
+        if (anim != null)
+        {
+            anim.SetBool("isGrounded", isGrounded);
         }
 
         if (currentHp <= 0)
@@ -121,7 +142,7 @@ public class Player : MonoBehaviour
         currentHp -= damageAmount;
         currentHp = Mathf.Clamp(currentHp, 0, maxHp);
 
-        if(UIManager.Instance != null)
+        if (UIManager.Instance != null)
         {
             UIManager.Instance.UpdateHealthBar(currentHp, maxHp);
             UIManager.Instance.UpdateHealthText(currentHp, maxHp);
