@@ -10,7 +10,7 @@ public class ItemSpawner : MonoBehaviour
     public float speed = 5f;
     public List<Item> items = new List<Item>();
     public Transform parent;
-    private float[] spawnPoints = {-3, -2, -1, 0, 1, 2, 3};
+    private float[] lanes = {-1, 0, 1};
     public float maxHorizontal;
     public float minHorizontal;
     public float maxVertical;
@@ -32,10 +32,10 @@ public class ItemSpawner : MonoBehaviour
     private Vector3 GetRandomLocation()
     {
         float xRand = 0;
-        if (spawnPoints.Length > 0)
+        if (lanes.Length > 0)
         {
-            int randomIndex = Random.Range(0, spawnPoints.Length);
-            xRand = spawnPoints[randomIndex];
+            int randomIndex = Random.Range(0, lanes.Length);
+            xRand = lanes[randomIndex];
         }
         
         var yRand = Random.Range(minVertical, maxVertical);

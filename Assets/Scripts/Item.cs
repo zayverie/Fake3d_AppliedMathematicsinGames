@@ -40,14 +40,6 @@ public class Item : MonoBehaviour
         }
     }
 
-    // void LateUpdate() 
-    // {
-    //     Debug.Log("Item LateUpdate");
-    //     transform.LookAt(
-    //         transform.position +
-    //         Camera.main.transform.forward);
-    // }
-
     private Color GetRandomColor()
     {
         var rRand = Random.Range(0f, 1f);

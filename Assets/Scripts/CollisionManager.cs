@@ -39,9 +39,8 @@ public class CollisionManager : MonoBehaviour
         for (int i = 0; i < colliders.Count; i++)
         {
             var colliderA = colliders[i];
-            for (int j = 0; j < colliders.Count; j++)
+            for (int j = i + 1; j < colliders.Count; j++)
             {
-                if (i == j) continue;
                 var colliderB = colliders[j];
                 if (Overlaps(colliderA, colliderB))
                 {

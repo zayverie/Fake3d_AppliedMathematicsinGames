@@ -58,42 +58,13 @@ public class AABBCollider : MonoBehaviour
     {
         if (Player.Instance != null)
         {
-            // if (other.gameObject.name == "Ground")
-            // {
-            //     if (this.gameObject == W8_Player.Instance.gameObject && W8_Player.Instance.verticalVelocity <= 0f)
-            //     {
-            //         W8_Player.Instance.ResetVerticalVelocity();
-            //         W8_Player.Instance.isGrounded = true;
-            //         W8_Player.Instance.transform.position = new Vector3(W8_Player.Instance.transform.position.x, other.max.y + _length * 0.5f, W8_Player.Instance.transform.position.z);
-            //     }
-            // }
 
             if (other.gameObject.name.StartsWith("Item"))
             {
                 if (this.gameObject == Player.Instance.gameObject)
                 {
                     Player.Instance.isCollidingWithItem = true;
-                    Player.Instance.TakeDamage();
-                    // bool isHorizontallyOver = this.max.x > other.min.x && this.min.x < other.max.x;
-                    // bool isAboveObstacle = this.min.y >= other.max.y - 0.25f;
-
-                    // if (Player.Instance.verticalVelocity <= 0f && isHorizontallyOver && isAboveObstacle)
-                    // {
-                    //     Player.Instance.ResetVerticalVelocity();
-                    //     Player.Instance.isGrounded = true;
-                    //     Player.Instance.transform.position = new Vector3(Player.Instance.transform.position.x, other.max.y + _length * 0.5f, Player.Instance.transform.position.z);
-                    // }
-                    // else if (!isAboveObstacle)
-                    // { 
-                    //     if (Player.Instance.transform.position.x < other.transform.position.x)
-                    //     {
-                    //         Player.Instance.transform.position = new Vector3(other.min.x - _width * 0.5f, Player.Instance.transform.position.y, Player.Instance.transform.position.z);
-                    //     }
-                    //     else if (Player.Instance.transform.position.x > other.transform.position.x)
-                    //     {
-                    //         Player.Instance.transform.position = new Vector3(other.max.x + _width * 0.5f, Player.Instance.transform.position.y, Player.Instance.transform.position.z);
-                    //     }
-                    // }  
+                    Player.Instance.TakeDamage(5f);
                 }
             }
         }

@@ -13,6 +13,13 @@ public class Player : MonoBehaviour
     public bool isCollidingWithItem;
     public bool isCollidingWithObstacle;
     public bool _jumpPressed;
+    
+    [Header("Health Settings")]
+    public float currentHp;
+    public float maxHp = 100f;
+
+    [Header("Regen Settings")]
+    public float regenRate = 1f;
 
     void Awake()
     {
@@ -25,11 +32,36 @@ public class Player : MonoBehaviour
             Destroy(this);
         }
     }
+    void Start()
+    {
+        currentHp = maxHp;
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateHealthBar(currentHp, maxHp);
+        }
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateHealthText(currentHp, maxHp);
+        }
+    }
     void Update()
     {
         if (Input.GetButtonDown("Jump"))
         {
             _jumpPressed = true;
+        }
+
+        if (currentHp <= 0)
+        {
+            UIManager.Instance.LoseGame();
+            Debug.Log("Player has been defeated!");
+        }
+
+        if (currentHp < maxHp)
+        {
+            RegenerateHealth();
         }
     }
 
@@ -42,9 +74,6 @@ public class Player : MonoBehaviour
 
         transform.position += playerDirection.normalized * velocity * Time.fixedDeltaTime;
 
-        // AABBCollider collider = GetComponent<AABBCollider>();
-        // collider.FixedUpdate();
-        
         if (_jumpPressed && isGrounded)
         {
             Debug.Log("Jump pressed");
@@ -64,15 +93,10 @@ public class Player : MonoBehaviour
             isGrounded = true;
         }
 
-        if (transform.position.x >= 3f || transform.position.x <= -3f)
+        if (transform.position.x >= 1f || transform.position.x <= -1f)
         {
-            transform.position = new Vector3(Mathf.Clamp(transform.position.x, -3f, 3f), transform.position.y, transform.position.z);
+            transform.position = new Vector3(Mathf.Clamp(transform.position.x, -1f, 1f), transform.position.y, transform.position.z);
         }
-        // if (transform.position.y < -5f)
-        // {
-        //     Destroy(this.gameObject);
-        //     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        // }
     }
     public float ResetVerticalVelocity()
     {
@@ -80,11 +104,34 @@ public class Player : MonoBehaviour
         return verticalVelocity;
     }
 
-    public void TakeDamage()
+    public void TakeDamage(float damageAmount)
     {
+        currentHp -= damageAmount;
+        currentHp = Mathf.Clamp(currentHp, 0, maxHp);
+
+        if(UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateHealthBar(currentHp, maxHp);
+            UIManager.Instance.UpdateHealthText(currentHp, maxHp);
+        }
         if (UIManager.Instance != null && UIManager.Instance.damageFlashPanel != null)
         {
             StartCoroutine(UIManager.Instance.FlashDamage());
+        }
+    }
+
+    public void RegenerateHealth()
+    {
+        if (currentHp < maxHp)
+        {
+            currentHp += regenRate * Time.fixedDeltaTime;
+            currentHp = Mathf.Clamp(currentHp, 0, maxHp);
+
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.UpdateHealthBarRegen(currentHp, maxHp);
+                UIManager.Instance.UpdateHealthText(currentHp, maxHp);
+            }
         }
     }
 }
