@@ -59,15 +59,6 @@ public class ItemSpawner : MonoBehaviour
 
     private void Update()
     {
-        foreach (var item in items)
-        {
-            if (item == null || !item.gameObject.activeInHierarchy)
-            {
-                continue;
-            }
-            ItemMover(item);
-        }
-
         List<Transform> children = new List<Transform>();
 
         foreach(Transform child in transform)
@@ -83,6 +74,17 @@ public class ItemSpawner : MonoBehaviour
         for(int i = 0 ; i < children.Count; i++)
         {
             children[i].SetSiblingIndex(i);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        foreach (var item in items)
+        {
+            if (item != null && item.gameObject.activeInHierarchy)
+            {
+                ItemMover(item);
+            }
         }
     }
 

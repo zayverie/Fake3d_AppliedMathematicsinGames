@@ -35,7 +35,7 @@ public class Item : MonoBehaviour
         transform.localScale = Vector3.one * perspective;
 
         transform.position = new Vector3(itemPosition.x * perspective, itemPosition.y * perspective, 0f);
-
+        
         if (perspective > 5f)
         {
             ReleaseItemToPool();

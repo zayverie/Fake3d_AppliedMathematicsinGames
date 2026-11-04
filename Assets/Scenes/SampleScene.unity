@@ -1502,7 +1502,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemSpawner
   itemToSpawn: {fileID: 6081077483105827887, guid: 454efb5dc1adb6b4c9b18118ec7af24f, type: 3}
-  speed: 4
+  speed: 10
   items: []
   parent: {fileID: 741454859}
   collectionCheck: 1
