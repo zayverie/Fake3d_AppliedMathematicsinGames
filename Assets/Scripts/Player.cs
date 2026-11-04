@@ -13,6 +13,11 @@ public class Player : MonoBehaviour
     public bool isCollidingWithItem;
     public bool isCollidingWithObstacle;
     public bool _jumpPressed;
+
+    [Header("Lane Movement")]
+    private float[] lanes = new float[] { -1f, 0f, 1f };
+    private int currentLaneIndex = 1; 
+    [SerializeField] private float laneShiftSpeed = 20f; 
     
     [Header("Health Settings")]
     public float currentHp;
@@ -48,6 +53,21 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (currentLaneIndex > 0)
+            {
+                currentLaneIndex--;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (currentLaneIndex < lanes.Length - 1)
+            {
+                currentLaneIndex++;
+            }
+        }
+
         if (Input.GetButtonDown("Jump"))
         {
             _jumpPressed = true;
@@ -67,12 +87,9 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {  
-        Vector3 playerDirection = new Vector3(
-            Input.GetAxisRaw("Horizontal"),
-            0f,
-            0f);
-
-        transform.position += playerDirection.normalized * velocity * Time.fixedDeltaTime;
+        float targetX = lanes[currentLaneIndex];
+        float moveX = Mathf.MoveTowards(transform.position.x, targetX, laneShiftSpeed * Time.fixedDeltaTime);
+        transform.position = new Vector3(moveX, transform.position.y, transform.position.z);
 
         if (_jumpPressed && isGrounded)
         {
@@ -91,11 +108,6 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(transform.position.x, groundY, transform.position.z);
             verticalVelocity = 0f;
             isGrounded = true;
-        }
-
-        if (transform.position.x >= 1f || transform.position.x <= -1f)
-        {
-            transform.position = new Vector3(Mathf.Clamp(transform.position.x, -1f, 1f), transform.position.y, transform.position.z);
         }
     }
     public float ResetVerticalVelocity()
