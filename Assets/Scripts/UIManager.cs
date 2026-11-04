@@ -29,6 +29,8 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
+        Time.timeScale = 1f;
+        
         if (instance == null)
         {
             instance = this;
@@ -39,15 +41,17 @@ public class UIManager : MonoBehaviour
             Destroy(this);
         }
 
-        if(losePanel != null && losePanel.activeSelf)
+        if (losePanel != null && losePanel.activeSelf)
         {
             losePanel.SetActive(false);
         }
-        if(winPanel != null && winPanel.activeSelf)
+
+        if (winPanel != null && winPanel.activeSelf)
         {
             winPanel.SetActive(false);
         }
-        if(damageFlashPanel != null && damageFlashPanel.activeSelf)
+
+        if (damageFlashPanel != null && damageFlashPanel.activeSelf)
         {
             damageFlashPanel.SetActive(false);
         }
@@ -122,8 +126,8 @@ public class UIManager : MonoBehaviour
     {
         if (losePanel != null)
         {
-            losePanel.SetActive(true);
             gameplayUI.SetActive(false);
+            losePanel.SetActive(true);
             Time.timeScale = 0f;
         }
     }
@@ -137,5 +141,4 @@ public class UIManager : MonoBehaviour
             damageFlashPanel.SetActive(false);
         }
     }
-
 }

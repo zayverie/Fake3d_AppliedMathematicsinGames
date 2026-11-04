@@ -187,7 +187,7 @@ public class Player : MonoBehaviour
     {
         if (currentHp < maxHp)
         {
-            currentHp += regenRate * Time.fixedDeltaTime;
+            currentHp += regenRate * Time.deltaTime;
             currentHp = Mathf.Clamp(currentHp, 0, maxHp);
 
             if (UIManager.Instance != null)

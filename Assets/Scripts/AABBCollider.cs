@@ -38,6 +38,7 @@ public class AABBCollider : MonoBehaviour
 
         Item item = GetComponent<Item>();
         float currentZ = (item != null) ? item.itemPosition.z : this.transform.position.z;
+        float currentY = (item != null) ? item.itemPosition.y : this.transform.position.y;
 
         var posZ = currentZ + _depth * .5f;
         var negZ = currentZ - _depth * .5f;
@@ -58,15 +59,24 @@ public class AABBCollider : MonoBehaviour
     {
         if (Player.Instance != null)
         {
-
-            if (other.gameObject.name.StartsWith("Item"))
+            if (Player.Instance.isInvincible)
             {
-                if (this.gameObject == Player.Instance.gameObject)
+                return;
+            }
+            else
+            {
+                if (other.gameObject.name.StartsWith("Item"))
                 {
-                    Player.Instance.isCollidingWithItem = true;
-                    Player.Instance.TakeDamage(5f);
+                    if (this.gameObject == Player.Instance.gameObject)
+                    {
+                        Debug.Log($"Player Y: {transform.position.y} | Item Y: {other.transform.position.y}");
+                        Player.Instance.isCollidingWithItem = true;
+                        Player.Instance.TakeDamage(5f);
+                        Destroy(other.gameObject);
+                    }
                 }
             }
+            
         }
     }
 }

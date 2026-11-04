@@ -11,10 +11,6 @@ public class ItemSpawner : MonoBehaviour
     public List<Item> items = new List<Item>();
     public Transform parent;
     private float[] lanes = {-1, 0, 1};
-    public float maxHorizontal;
-    public float minHorizontal;
-    public float maxVertical;
-    public float minVertical;
 
     private void Start()
     {
@@ -38,8 +34,8 @@ public class ItemSpawner : MonoBehaviour
             xRand = lanes[randomIndex];
         }
         
-        var yRand = Random.Range(minVertical, maxVertical);
-        return new Vector3(xRand, yRand, 2000f);
+        float groundY = -3f;
+        return new Vector3(xRand, groundY, 2000f);
     }
 
     private void Update()

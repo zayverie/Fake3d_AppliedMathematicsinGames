@@ -169,6 +169,7 @@ MonoBehaviour:
   currentHp: 0
   maxHp: 100
   regenRate: 1
+  anim: {fileID: 0}
 --- !u!114 &1347318695728325216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,6 +182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48da3f7bfb37a3440b32e6f32ddadad1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AABBCollider
-  _length: 0.32
+  _length: 0.5
   _width: 0.48
-  _depth: 10
+  _depth: 30

@@ -121,4 +121,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AABBCollider
   _length: 1
   _width: 1
-  _depth: 15
+  _depth: 30
