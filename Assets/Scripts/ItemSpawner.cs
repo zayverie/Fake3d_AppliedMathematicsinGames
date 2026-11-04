@@ -7,9 +7,10 @@ using System.Runtime.CompilerServices;
 public class ItemSpawner : MonoBehaviour
 {
     public Item itemToSpawn;
-    public float speed = 0.01f;
+    public float speed = 5f;
     public List<Item> items = new List<Item>();
     public Transform parent;
+    private float[] spawnPoints = {-3, -2, -1, 0, 1, 2, 3};
     public float maxHorizontal;
     public float minHorizontal;
     public float maxVertical;
@@ -17,21 +18,28 @@ public class ItemSpawner : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating(nameof(BeginSpawn), 1, 1f);
+        InvokeRepeating(nameof(BeginSpawn), 1, .5f);
     }
 
     private void BeginSpawn()
     {
         var spawnedItem = Instantiate(itemToSpawn, parent);
         spawnedItem.itemPosition = GetRandomLocation();
+        spawnedItem.ApplyPerspective();
         items.Add(spawnedItem);
     }
 
     private Vector3 GetRandomLocation()
     {
-        var xRand = Random.Range(minHorizontal, maxHorizontal);
+        float xRand = 0;
+        if (spawnPoints.Length > 0)
+        {
+            int randomIndex = Random.Range(0, spawnPoints.Length);
+            xRand = spawnPoints[randomIndex];
+        }
+        
         var yRand = Random.Range(minVertical, maxVertical);
-        return new Vector3(xRand, yRand, 1000f);
+        return new Vector3(xRand, yRand, 2000f);
     }
 
     private void Update()
@@ -44,8 +52,7 @@ public class ItemSpawner : MonoBehaviour
             }
             ItemMover(item);
         }
-
-        transform.position = GetRandomLocation();
+        // transform.position = GetRandomLocation();
         List<Transform> children = new List<Transform>();
         foreach(Transform child in transform)
         {

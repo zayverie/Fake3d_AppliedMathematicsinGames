@@ -17,17 +17,36 @@ public class Item : MonoBehaviour
 
     private void Update()
     {
-        float obstaclePositionValue = FocalLength.focalLength + itemPosition.z;
+        ApplyPerspective();
+    }
 
-        if (obstaclePositionValue <= 0)
+    public void ApplyPerspective()
+    {
+        
+        float itemPositionValue = FocalLength.focalLength + itemPosition.z;
+
+        if (itemPositionValue <= 0)
         {
             Destroy(gameObject);
             return;
         }
-        var perspective = FocalLength.focalLength / obstaclePositionValue;
+        var perspective = FocalLength.focalLength / itemPositionValue;
         transform.localScale = Vector3.one * perspective;
-        transform.position = new Vector2(itemPosition.x, itemPosition.y) * perspective;
+        transform.position = new Vector3(itemPosition.x * perspective, itemPosition.y * perspective, 0f);
+
+        if (perspective > 5f)
+        {
+            Destroy(gameObject);
+        }
     }
+
+    // void LateUpdate() 
+    // {
+    //     Debug.Log("Item LateUpdate");
+    //     transform.LookAt(
+    //         transform.position +
+    //         Camera.main.transform.forward);
+    // }
 
     private Color GetRandomColor()
     {
