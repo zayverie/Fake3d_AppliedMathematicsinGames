@@ -39,9 +39,19 @@ public class CollisionManager : MonoBehaviour
         for (int i = 0; i < colliders.Count; i++)
         {
             var colliderA = colliders[i];
+            if (colliderA == null || !colliderA.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+            
             for (int j = i + 1; j < colliders.Count; j++)
             {
                 var colliderB = colliders[j];
+                if (colliderB == null || !colliderB.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
                 if (Overlaps(colliderA, colliderB))
                 {
                     colliderA.OnCollision(colliderB);

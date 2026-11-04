@@ -27,10 +27,21 @@ public class ItemSpawner : MonoBehaviour
 
     private void BeginSpawn()
     {
-        var spawnedItem = Instantiate(itemToSpawn, parent);
+        if (itemToSpawn == null)
+        {
+            return;
+        }
+
+        IObjectPool<Item> pool = GetPool(itemToSpawn.gameObject);
+        Item spawnedItem = pool.Get();
+    
         spawnedItem.itemPosition = GetRandomLocation();
         spawnedItem.ApplyPerspective();
-        items.Add(spawnedItem);
+        
+        if (!items.Contains(spawnedItem))
+        {
+            items.Add(spawnedItem);
+        }
     }
 
     private Vector3 GetRandomLocation()
@@ -50,16 +61,21 @@ public class ItemSpawner : MonoBehaviour
     {
         foreach (var item in items)
         {
-            if (item == null)
+            if (item == null || !item.gameObject.activeInHierarchy)
             {
                 continue;
             }
             ItemMover(item);
         }
-        // transform.position = GetRandomLocation();
+
         List<Transform> children = new List<Transform>();
+
         foreach(Transform child in transform)
         {
+            if (!child.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
             children.Add(child);
         }       
         children.OrderBy(x => x.position.z);

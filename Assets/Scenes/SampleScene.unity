@@ -1178,6 +1178,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 5178276803072153393, guid: 99084753197be1240ab48048cf7b9c31, type: 3}
+    - target: {fileID: 3249239374800195656, guid: a50f3e18a836d5a4782551392bdde097, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3485634928645257594, guid: a50f3e18a836d5a4782551392bdde097, type: 3}
       propertyPath: anim
       value: 
@@ -1467,6 +1471,9 @@ MonoBehaviour:
   speed: 4
   items: []
   parent: {fileID: 741454859}
+  collectionCheck: 1
+  defaultCapacity: 20
+  maxSize: 100
 --- !u!4 &1856491002
 Transform:
   m_ObjectHideFlags: 0

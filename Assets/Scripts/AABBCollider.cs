@@ -65,7 +65,7 @@ public class AABBCollider : MonoBehaviour
             }
             else
             {
-                if (other.gameObject.name.StartsWith("Item"))
+                if (other.TryGetComponent<Item>(out Item hitItem))
                 {
                     if (this.gameObject == Player.Instance.gameObject)
                     {
@@ -73,15 +73,7 @@ public class AABBCollider : MonoBehaviour
                         Player.Instance.isCollidingWithItem = true;
                         Player.Instance.TakeDamage(5f);
 
-                        Item hitItem = other.GetComponent<Item>();
-                        if (hitItem != null)
-                        {
-                            hitItem.ReleaseItemToPool();
-                        }
-                        else
-                        {
-                            Destroy(other.gameObject);
-                        }
+                        hitItem.ReleaseItemToPool();
                     }
                 }
             }
